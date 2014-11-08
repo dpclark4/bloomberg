@@ -25,6 +25,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private JPanel framePanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
+    private JPanel bottomLeftTop,bottomLeftBottom;
     private JPanel bottomLeftPanel,topLeftPanel;
     private JPanel topRightLeftPanel,topRightRightPanel;
     private JPanel bottomRightPanel,topRightPanel;
@@ -40,6 +41,8 @@ public class UserFrame extends JFrame implements KeyListener {
         topPanel = new JPanel();
         bottomPanel = new JPanel();
         bottomLeftPanel = new JPanel();
+        bottomLeftTop = new JPanel();
+        bottomLeftBottom = new JPanel();
         topLeftPanel = new JPanel();
         bottomRightPanel = new JPanel();
         topRightPanel = new JPanel();
@@ -67,6 +70,7 @@ public class UserFrame extends JFrame implements KeyListener {
         table.setEnabled(false);
 
         topPanel.setLayout(new GridLayout(1,0));
+//        topPanel.setLayout(new GridBagLayout());
         getContentPane().add(framePanel);
         inEvent = new InputEvent();
         getScreenSize();
@@ -86,7 +90,7 @@ public class UserFrame extends JFrame implements KeyListener {
     //http://stackoverflow.com/questions/3179136/jtable-how-to-refresh-table-model-after-insert-delete-or-update-the-data
     private JTable getJTable() {
         JTable jTable = null;
-        String[] colName = {"SYMBOL", "OWNED", "VALUE"};
+        String[] colName = {"SYMBOL", "OWNED", "VALUE","TOTAL"};
             jTable = new JTable() {
                 public boolean isCellEditable(int nRow, int nCol) {
                     return false;
@@ -105,6 +109,7 @@ public class UserFrame extends JFrame implements KeyListener {
         graphLabel = new JLabel(new ImageIcon(graph));
         topLeftPanel.add(graphLabel);
         topRightPanel.setLayout(new GridLayout(1,0));
+//        topRightPanel.setLayout(new FlowLayout());
         topRightPanel.add(topRightLeftPanel);
         topRightPanel.add(topRightRightPanel);
         topRightLeftPanel.add(table);
@@ -122,15 +127,21 @@ public class UserFrame extends JFrame implements KeyListener {
         b2.addActionListener(pauseListener);
         JButton b3 = new JButton("Next Day");
         b3.addActionListener(nextDayListener);
+        JButton b4 = new JButton("Buy");
+        b2.addActionListener(buyListener);
+        JButton b5 = new JButton("Sell");
+        b3.addActionListener(sellListener);
         bottomLeftPanel.add(b1);
         bottomLeftPanel.add(b2);
         bottomLeftPanel.add(b3);
+        bottomRightPanel.add(b4);
+        bottomRightPanel.add(b5);
 //        table.setModel(new DefaultTableModel());
         model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE"});
-        model.addRow(new Object[]{"AAPL", "8", "155.4"});
-        model.addRow(new Object[]{"MSFT", "2", "234"});
-        model.addRow(new Object[]{"GOOG", "1", "142"});
+        model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE","TOTAL"});
+        model.addRow(new Object[]{"AAPL", "8", "155.4","2"});
+        model.addRow(new Object[]{"MSFT", "2", "234","5"});
+        model.addRow(new Object[]{"GOOG", "1", "142","1"});
         model.removeRow(1);
         model.fireTableDataChanged();//call this whenever data changes in table
         graphGraphics = graph.createGraphics();
@@ -157,8 +168,8 @@ public class UserFrame extends JFrame implements KeyListener {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         windowSizeX = (int) screenSize.getWidth();
         windowSizeY = (int) screenSize.getHeight();
-        graphSizeX = (int)(windowSizeX*.75);
-        graphSizeY = (int)(windowSizeY*.75);
+        graphSizeX = (int)(windowSizeX*.5);
+        graphSizeY = (int)(windowSizeY*.5);
     }
 
     public void startNewDay() {
