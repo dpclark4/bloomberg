@@ -141,10 +141,10 @@ public class UserFrame extends JFrame implements KeyListener {
         bottomLeftPanel.setLayout(new GridLayout(0,1));
         bottomLeftPanel.add(bottomLeftTopPanel);
         bottomLeftPanel.add(bottomLeftBottomPanel);
-        currentStock = new JLabel("Date:");
+        currentStock = new JLabel("STOCK:");
         currentStock.setPreferredSize(new Dimension(300,75));
         currentStock.setFont(new Font("Serif", Font.PLAIN, 26));
-        stockPrice = new JLabel("Date:");
+        stockPrice = new JLabel("VALUE:");
         stockPrice.setPreferredSize(new Dimension(300,75));
         stockPrice.setFont(new Font("Serif", Font.PLAIN, 26));
         bottomLeftTopPanel.add(currentStock);
