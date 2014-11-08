@@ -26,7 +26,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private JPanel bottomLeftPanel,topLeftPanel;
     private JPanel topRightLeftPanel,topRightRightPanel;
     private JPanel bottomRightPanel,topRightPanel;
-    private JLabel dateLabel,timeLabel,moneyLabel, priceLabel;
+    private JLabel dateLabel,timeLabel,moneyLabel;
     private DefaultTableModel model;
     private ActionListener buyListener,sellListener,nextDayListener,playListener,pauseListener;
     private InputEvent inEvent;
@@ -149,9 +149,6 @@ public class UserFrame extends JFrame implements KeyListener {
         dateLabel = new JLabel("Date:");
         dateLabel.setPreferredSize(new Dimension(300,75));
         dateLabel.setFont(new Font("Serif", Font.PLAIN, 26));
-        priceLabel = new JLabel("Price:");
-        priceLabel.setPreferredSize(new Dimension(150,75));
-        priceLabel.setFont(new Font("Serif", Font.PLAIN, 26));
         timeLabel = new JLabel("Time:");
         timeLabel.setPreferredSize(new Dimension(300,75));
         timeLabel.setFont(new Font("Serif", Font.PLAIN, 26));
@@ -159,11 +156,10 @@ public class UserFrame extends JFrame implements KeyListener {
         moneyLabel.setPreferredSize(new Dimension(300,75));
         moneyLabel.setFont(new Font("Serif", Font.PLAIN, 26));
         bottomRightPanel.add(moneyLabel);
-        bottomLeftBottomPanel.setLayout(new GridLayout(1,0));
+        bottomLeftBottomPanel.setLayout(new GridLayout(1, 0));
 
         bottomLeftBottomPanel.add(dateLabel);
         bottomLeftBottomPanel.add(timeLabel);
-        //bottomLeftBottomPanel.add(priceLabel);
 //        table.setModel(new DefaultTableModel());
         model = (DefaultTableModel) table.getModel();
         model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE","TOTAL"});
@@ -236,7 +232,7 @@ public class UserFrame extends JFrame implements KeyListener {
         double ppp = (value - minheight)/(maxheight-minheight);
         double perc = ((maxheight-minheight)-(maxheight-value));
         double p = (float)(maxheight-minheight)/(float)((maxheight-minheight)-(maxheight-value));
-        //System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
+        System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
         return ppp;
 
 //        double p = 100 * value / openingPrice;
@@ -267,12 +263,11 @@ public class UserFrame extends JFrame implements KeyListener {
         int curY = convertToGraphPixelsY(valTo55Graph(value));
 
         //System.out.printf("drawing at %d, %d\n", curX, curY);
-        if (value >= openingPrice)
-            graphGraphics.setColor(Color.GREEN);
-        if (value < openingPrice)
-            graphGraphics.setColor(Color.RED);
-        graphGraphics.fillRect(curX, curY, 2, 2);
-        graphGraphics.drawLine(lastX, lastY, curX, curY);
+        graphGraphics.setColor(Color.GREEN);
+        graphGraphics.fillRect(curX, curY, 4, 4);
+        if(curX > lastX) {
+            graphGraphics.drawLine(lastX, lastY, curX, curY);
+        }
         graphLabel.imageUpdate(graph, 0, 0, 0, windowSizeX, windowSizeY);
         this.repaint();
         lastX = curX;
