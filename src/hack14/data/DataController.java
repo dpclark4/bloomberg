@@ -73,7 +73,7 @@ public class DataController {
             rr = new RequestResponse();
             getData("MSFT US Equity",11,7);
             changeData();
-        }
+        }//t
         catch (Exception e){
         }
         Frame.resetGraph();
