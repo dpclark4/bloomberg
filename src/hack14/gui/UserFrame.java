@@ -25,10 +25,11 @@ public class UserFrame extends JFrame implements KeyListener {
     private JPanel framePanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
-    private JPanel bottomLeftTop,bottomLeftBottom;
+    private JPanel bottomLeftTopPanel,bottomLeftBottomPanel;
     private JPanel bottomLeftPanel,topLeftPanel;
     private JPanel topRightLeftPanel,topRightRightPanel;
     private JPanel bottomRightPanel,topRightPanel;
+    private JLabel dateLabel,timeLabel,moneyLabel;
     private DefaultTableModel model;
     private ActionListener buyListener,sellListener,nextDayListener,playListener,pauseListener;
     private InputEvent inEvent;
@@ -41,8 +42,8 @@ public class UserFrame extends JFrame implements KeyListener {
         topPanel = new JPanel();
         bottomPanel = new JPanel();
         bottomLeftPanel = new JPanel();
-        bottomLeftTop = new JPanel();
-        bottomLeftBottom = new JPanel();
+        bottomLeftTopPanel = new JPanel();
+        bottomLeftBottomPanel = new JPanel();
         topLeftPanel = new JPanel();
         bottomRightPanel = new JPanel();
         topRightPanel = new JPanel();
@@ -123,32 +124,69 @@ public class UserFrame extends JFrame implements KeyListener {
         initListeners();
         JButton b1 = new JButton("Play");
         b1.addActionListener(playListener);
+        b1.setPreferredSize((new Dimension(100,50)));
         JButton b2 = new JButton("Pause");
         b2.addActionListener(pauseListener);
+        b2.setPreferredSize((new Dimension(100,50)));
         JButton b3 = new JButton("Next Day");
         b3.addActionListener(nextDayListener);
+        b3.setPreferredSize((new Dimension(100,50)));
         JButton b4 = new JButton("Buy");
-        b2.addActionListener(buyListener);
+        b4.addActionListener(buyListener);
+        b4.setPreferredSize((new Dimension(100,50)));
         JButton b5 = new JButton("Sell");
-        b3.addActionListener(sellListener);
-        bottomLeftPanel.add(b1);
-        bottomLeftPanel.add(b2);
-        bottomLeftPanel.add(b3);
+        b5.addActionListener(sellListener);
+        b5.setPreferredSize((new Dimension(100,50)));
+        bottomLeftPanel.setLayout(new GridLayout(0,1));
+        bottomLeftPanel.add(bottomLeftTopPanel);
+        bottomLeftPanel.add(bottomLeftBottomPanel);
+        bottomLeftTopPanel.add(b1);
+        bottomLeftTopPanel.add(b2);
+        bottomLeftTopPanel.add(b3);
         bottomRightPanel.add(b4);
         bottomRightPanel.add(b5);
+        dateLabel = new JLabel("Date:");
+        dateLabel.setPreferredSize(new Dimension(300,75));
+        dateLabel.setFont(new Font("Serif", Font.PLAIN, 26));
+        timeLabel = new JLabel("Time:");
+        timeLabel.setPreferredSize(new Dimension(300,75));
+        timeLabel.setFont(new Font("Serif", Font.PLAIN, 26));
+        moneyLabel = new JLabel("$:");
+        moneyLabel.setPreferredSize(new Dimension(300,75));
+        moneyLabel.setFont(new Font("Serif", Font.PLAIN, 26));
+        bottomRightPanel.add(moneyLabel);
+        bottomLeftBottomPanel.setLayout(new GridLayout(1,0));
+
+        bottomLeftBottomPanel.add(dateLabel);
+        bottomLeftBottomPanel.add(timeLabel);
 //        table.setModel(new DefaultTableModel());
         model = (DefaultTableModel) table.getModel();
         model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE","TOTAL"});
         model.addRow(new Object[]{"AAPL", "8", "155.4","2"});
         model.addRow(new Object[]{"MSFT", "2", "234","5"});
         model.addRow(new Object[]{"GOOG", "1", "142","1"});
-        model.removeRow(1);
+//        this.removeTableEntry(1);
+//        this.insertTableEntry(1,"a","b","c","d");
         model.fireTableDataChanged();//call this whenever data changes in table
         graphGraphics = graph.createGraphics();
         draw55Graph();
         this.pack();
     }
-
+    public void updateDate(String date){
+        dateLabel.setText("DATE: "+ date);
+    }
+    public void updateTime(String time){
+        timeLabel.setText("TIME: " + time);
+    }
+    public void updateCash(String money){
+        timeLabel.setText("$: " + money);
+    }
+    public void removeTableEntry(int index){
+        model.removeRow(index);
+    }
+    public void insertTableEntry(int index, String s1,String s2,String s3,String s4){
+        model.insertRow(index,new Object[]{s1, s2, s3, s4});
+    }
     private void draw55Graph(){
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
@@ -172,7 +210,7 @@ public class UserFrame extends JFrame implements KeyListener {
         graphSizeY = (int)(windowSizeY*.5);
     }
 
-    public void startNewDay() {
+    public void resetGraph() {
         //reset graph
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX, graphSizeY);
@@ -206,7 +244,7 @@ public class UserFrame extends JFrame implements KeyListener {
     }
 
     public int convertToGraphPixelsX(double widthPercentage) {
-        System.out.printf("width percentage is %f.\n", widthPercentage);
+        //System.out.printf("width percentage is %f.\n", widthPercentage);
         return (int) (graphLeft + (widthPercentage / 100.0f) * (float) graphSizeX);
     }
 
@@ -215,7 +253,7 @@ public class UserFrame extends JFrame implements KeyListener {
         int curX = convertToGraphPixelsX(minuteToXPercentage(minutesElapsed));
         int curY = convertToGraphPixelsY(valTo55Graph(value));
 
-        System.out.printf("drawing at %d, %d\n", curX, curY);
+        //System.out.printf("drawing at %d, %d\n", curX, curY);
         graphGraphics.setColor(Color.GREEN);
         graphGraphics.fillRect(curX, curY, 2, 2);
         graphGraphics.drawLine(lastX, lastY, curX, curY);
