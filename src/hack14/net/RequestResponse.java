@@ -14,9 +14,9 @@ public class RequestResponse {
     public RequestResponse() throws Exception {
         messageList = new ArrayList<Message>();
     }
-    public ArrayList<Message> getMessages(){
+    public Message getMessage(){
 
-        return messageList;
+        return messageList.get(0);
     }
     public void getSecurityData(String security, int month, int day )throws Exception {
         SessionOptions sessionOptions = new SessionOptions();

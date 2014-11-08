@@ -18,11 +18,15 @@ public class mainDriver {
         DataController controller;
         controller = new DataController();
         RequestResponse rr = new RequestResponse();
-        rr.getSecurityData("F US Equity", 11, 7);
-        ArrayList<Message> temp = rr.getMessages();
-        Element data = temp.get(0).getElement("barData").getElement("barTickData");
-        Element bar = data.getValueAsElement(0);
-        System.out.println("open: " + bar.getElementAsFloat64("open"));
+        rr.getSecurityData("F US Equity", 9, 10);
+        Message msg = rr.getMessage();
+        Element data = msg.getElement("barData").getElement("barTickData");
+        int numbars = data.numValues();
+        for(int i = 0; i < numbars; ++i) {
+            Element bar = data.getValueAsElement(i);
+            //System.out.println("open: " + bar.getElementAsFloat64("open"));
+        }
+
 
     }
 
