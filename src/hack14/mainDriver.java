@@ -15,18 +15,11 @@ public class mainDriver {
     public mainDriver() throws Exception {
         UserFrame frame;
         frame = new UserFrame();
-        frame.openingPrice = 555;
-        frame.enterData(543,0);
-        frame.enterData(555,11);
-        frame.enterData(551,22);
-        frame.enterData(552,33);
-        frame.enterData(557,44);
-        frame.enterData(573,55);
-        frame.enterData(554,66);
-        frame.enterData(552,77);
-        frame.enterData(551,88);
-        //DataController controller;
-        //controller = new DataController();
+
+        DataController controller;
+        controller = new DataController(frame);
+        controller.getData();
+        controller.testFrame();
         //RequestResponse rr = new RequestResponse();
         //rr.getSecurityData("F US Equity", 11, 7);
         //ArrayList<Message> temp = rr.getMessages();
