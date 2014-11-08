@@ -34,7 +34,7 @@ public class UserFrame extends JFrame implements KeyListener {
     public boolean hasEvent = false;
     public double openingPrice;
     public int graphVariance = 1;
-
+//stuf
     public UserFrame() {
         framePanel = new JPanel();
         topPanel = new JPanel();
