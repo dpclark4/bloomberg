@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="blpapi-3.8.5.1">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/blpapi_java_3.8.5.1/bin" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/Downloads/blpapi_java_3.8.5.1/bin" recursive="false" />
+  </library>
+</component>
