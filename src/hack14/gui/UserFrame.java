@@ -1,6 +1,7 @@
 package hack14.gui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,31 +20,94 @@ public class UserFrame extends JFrame implements KeyListener {
     private Graphics graphGraphics;
     private JLabel graphLabel;
     private	JTable table;
+    private JPanel framePanel;
+    private JPanel topPanel;
+    private JPanel bottomPanel;
+    private DefaultTableModel model;
     private InputEvent inEvent;
+    private GridBagConstraints constraints;
     public boolean hasEvent = false;
     public double openingPrice;
 
     public UserFrame() {
+        framePanel = new JPanel();
+        topPanel = new JPanel();
+        // Create columns names
+        String columnNames[] = { "Column 1", "Column 2", "Column 3" };
+        // Create some data
+        String dataValues[][] =
+                {
+                        { "SYMBOL", "OWNED", "VALUE" },
+                        { "IBM", "2", "143.3" },
+                        { "MSFT", "4", "246.7" },
+
+                };
+
+//        DefaultTableModel model = new DefaultTableModel(data, columnNames)
+//        table = new JTable( model );
+        // Create a new table instance
+        table = getJTable();
+        table.setEnabled(false);
+
+        topPanel.setLayout( new FlowLayout() );
+        getContentPane().add( topPanel );
         inEvent = new InputEvent();
         getScreenSize();
         addKeyListener(this);
-        this.setUndecorated(true);
+//        this.setUndecorated(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setSize(windowSizeX, windowSizeY);
-        this.setLayout(new FlowLayout());
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridheight = 4;
+        constraints.gridwidth = 2;
         this.setVisible(true);
         initGraph();
 
     }
 
+    //http://stackoverflow.com/questions/3179136/jtable-how-to-refresh-table-model-after-insert-delete-or-update-the-data
+    private JTable getJTable() {
+        JTable jTable = null;
+        String[] colName = { "SYMBOL", "OWNED", "VALUE" };
+        if (jTable == null) {
+            jTable = new JTable() {
+                public boolean isCellEditable(int nRow, int nCol) {
+                    return false;
+                }
+            };
+        }
+        DefaultTableModel contactTableModel = (DefaultTableModel) jTable
+                .getModel();
+        contactTableModel.setColumnIdentifiers(colName);
+        jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        return jTable;
+    }
+
+
     private void initGraph() {
-        graph = new BufferedImage(windowSizeX, windowSizeY, BufferedImage.TYPE_INT_ARGB);
+        graph = new BufferedImage(graphSizeX, graphSizeY, BufferedImage.TYPE_INT_ARGB);
         graphLabel = new JLabel(new ImageIcon(graph));
-        this.getContentPane().add(graphLabel);
-//        this.getContentPane().add(new JButton());
+        topPanel.add(graphLabel);
+        topPanel.add(table);
+
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        topPanel.add(new JButton(),constraints);
+        topPanel.add(new JButton(),constraints);
+        topPanel.add(new JButton(),constraints);
+//        table.setModel(new DefaultTableModel());
+        model = (DefaultTableModel) table.getModel();
+        model.addRow(new Object[]{"AAPL", "8", "155.4"});
+        model.addRow(new Object[]{"MSFT", "2", "234"});
+        model.addRow(new Object[]{"GOOG", "1", "142"});
+        model.removeRow(1);
+        model.fireTableDataChanged();//call this whenever data changes in table
         graphGraphics = graph.createGraphics();
-        graphGraphics.setColor(Color.BLUE);
-        graphGraphics.drawRect(0, 0, graphSizeX, graphSizeY);
+        graphGraphics.setColor(Color.BLACK);
+        graphGraphics.fillRect(0, 0, graphSizeX-1, graphSizeY-1);
         drawBackground();
         this.pack();
     }
@@ -96,6 +160,7 @@ public class UserFrame extends JFrame implements KeyListener {
         int curY = convertToGraphPixelsY(valTo55Graph(value));
 
         System.out.printf("drawing at %d, %d\n", curX, curY);
+        graphGraphics.setColor(Color.GREEN);
         graphGraphics.fillRect(curX, curY, 2, 2);
         graphGraphics.drawLine(lastX, lastY, curX, curY);
         graphLabel.imageUpdate(graph, 0, 0, 0, windowSizeX, windowSizeY);
