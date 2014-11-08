@@ -65,8 +65,8 @@
                 message.print(System.out);
                 if (Event.EventType.Constants.SESSION_STATUS ==
                         event.eventType().intValue()
-                        &&  "SessionTerminated" ==
-                        message.messageType().toString()){
+                        &&  "SessionTerminated".equals(
+                        message.messageType().toString())){
                     System.out.println("Terminating: " +    message.messageType());
                             System.exit(1);
                 }
