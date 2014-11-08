@@ -83,8 +83,8 @@ public class DataController {
         catch (Exception e){
         }
         Frame.resetGraph();
-        changeData();
-    }
+        changeData();00.020.
+    }//j
     public void advanceMinute(){
         if(data.numValues() <= minutesElapsed) {
             advanceDay();
