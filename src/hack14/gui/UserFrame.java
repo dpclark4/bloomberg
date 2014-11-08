@@ -17,7 +17,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private int lastX, lastY;//x and y coordiates for most recently graphed point
     private BufferedImage graph;
     private Graphics graphGraphics;
-    private JLabel graphLabel;
+    private JLabel graphLabel,currentStock,stockPrice;
     private JTable table;
     private JPanel framePanel;
     private JPanel topPanel;
@@ -141,6 +141,14 @@ public class UserFrame extends JFrame implements KeyListener {
         bottomLeftPanel.setLayout(new GridLayout(0,1));
         bottomLeftPanel.add(bottomLeftTopPanel);
         bottomLeftPanel.add(bottomLeftBottomPanel);
+        currentStock = new JLabel("Date:");
+        currentStock.setPreferredSize(new Dimension(300,75));
+        currentStock.setFont(new Font("Serif", Font.PLAIN, 26));
+        stockPrice = new JLabel("Date:");
+        stockPrice.setPreferredSize(new Dimension(300,75));
+        stockPrice.setFont(new Font("Serif", Font.PLAIN, 26));
+        bottomLeftTopPanel.add(currentStock);
+        bottomLeftTopPanel.add(stockPrice);
         bottomLeftTopPanel.add(b1);
         bottomLeftTopPanel.add(b2);
         bottomLeftTopPanel.add(b3);
@@ -182,6 +190,12 @@ public class UserFrame extends JFrame implements KeyListener {
     public void updateCash(String money){
         timeLabel.setText("$: " + money);
     }
+    public void updateCurrentStock(String ID){
+        timeLabel.setText("STOCK: " + ID);
+    }
+    public void updateStockPrice(String money){
+        timeLabel.setText("VALUE: " + money);
+    }
     public void removeTableEntry(int index){
         model.removeRow(index);
     }
@@ -216,6 +230,7 @@ public class UserFrame extends JFrame implements KeyListener {
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX, graphSizeY);
         graphLabel.imageUpdate(graph, 0, 0, 0, windowSizeX, windowSizeY);
+        draw55Graph();
         this.repaint();
     }
 
@@ -227,13 +242,8 @@ public class UserFrame extends JFrame implements KeyListener {
     public double valTo55Graph(double value) {
         double maxheight = (1.00 + (float)graphVariance*.01)*openingPrice;
         double minheight = (1.00 - (float)graphVariance*.01)*openingPrice;
-//        double maxheight = (openingPrice + graphVariance);
-//        double minheight = (openingPrice - graphVariance);
-        double ppp = (value - minheight)/(maxheight-minheight);
-        double perc = ((maxheight-minheight)-(maxheight-value));
-        double p = (float)(maxheight-minheight)/(float)((maxheight-minheight)-(maxheight-value));
-        System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
-        return ppp;
+        double p = (value - minheight)/(maxheight-minheight);
+        return p;
 
 //        double p = 100 * value / openingPrice;
 //        if (p > 100+graphVariance) return 101;//off the charts high
@@ -263,7 +273,12 @@ public class UserFrame extends JFrame implements KeyListener {
         int curY = convertToGraphPixelsY(valTo55Graph(value));
 
         //System.out.printf("drawing at %d, %d\n", curX, curY);
-        graphGraphics.setColor(Color.GREEN);
+        if(value >= openingPrice) {
+            graphGraphics.setColor(Color.GREEN);
+        }
+        else {
+            graphGraphics.setColor(Color.RED);
+        }
         graphGraphics.fillRect(curX, curY, 4, 4);
         if(curX > lastX) {
             graphGraphics.drawLine(lastX, lastY, curX, curY);
