@@ -52,9 +52,7 @@ public class RequestResponseParadigm {
                         message.correlationID());
                 System.out.println("messageType  =" +
                         message.messageType());
-                Element data = message.getElement("barData").getElement("barTickData");
-                Element bar = data.getValueAsElement(0);
-                System.out.println("open: " + bar.getElementAsFloat64("open"));
+
                 message.print(System.out);
             } }
         private static void handleOtherEvent(Event event) throws Exception
