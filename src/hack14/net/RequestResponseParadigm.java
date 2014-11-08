@@ -1,9 +1,10 @@
-//comment change223
+package hack14.net;//comment change223
 
     import com.bloomberglp.blpapi.*;
 
 public class RequestResponseParadigm {
-        public static void main(String[] args) throws Exception {
+
+        public RequestResponseParadigm() throws Exception {
             SessionOptions sessionOptions = new SessionOptions();
             sessionOptions.setServerHost("10.8.8.1");
             sessionOptions.setServerPort(8194);
@@ -32,14 +33,14 @@ public class RequestResponseParadigm {
                     case Event.EventType.Constants.RESPONSE: // final event
                         continueToLoop = false;               // fall through
                     case Event.EventType.Constants.PARTIAL_RESPONSE:
-                        handleResponseEvent(event);
+                        handleResponseEvent(event,frame);
                         break;
                     default:
-                        handleOtherEvent(event);
+                        handleOtherEvent(event,frame);
                         break;
                 } }
         }
-        private static void handleResponseEvent(Event event) throws Exception { System.out.println("EventType =" + event.eventType()); MessageIterator iter = event.messageIterator();
+        private static void handleResponseEvent(Event event, UserFrame frame) throws Exception { System.out.println("EventType =" + event.eventType()); MessageIterator iter = event.messageIterator();
             while (iter.hasNext()) {
                 Message message = iter.next();
                 System.out.println("correlationID=" +
@@ -48,7 +49,7 @@ public class RequestResponseParadigm {
                         message.messageType());
                 message.print(System.out);
             } }
-        private static void handleOtherEvent(Event event) throws Exception
+        private static void handleOtherEvent(Event event, UserFrame frame) throws Exception
         {
             System.out.println("EventType=" + event.eventType());
             MessageIterator iter = event.messageIterator();
