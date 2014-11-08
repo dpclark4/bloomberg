@@ -78,11 +78,12 @@ public class DataController {
     public void advanceDay() {
         minutesElapsed = 0;
         try {
-            getData("MSFT US Equity",11,8);
+            getData("MSFT US Equity",11,7);
         }
         catch (Exception e){
         }
         Frame.resetGraph();
+        changeData();
     }
     public void advanceMinute(){
         if(data.numValues() <= minutesElapsed) {
