@@ -33,7 +33,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
     public double openingPrice;
-    public int graphVariance = 1;
+    public int graphVariance = 3;
 //stuf
     public UserFrame() {
         framePanel = new JPanel();
@@ -189,8 +189,8 @@ public class UserFrame extends JFrame implements KeyListener {
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
         graphGraphics.setColor(Color.YELLOW);
-        graphGraphics.drawString("+5%",2,10);
-        graphGraphics.drawString("-5%",2,graphSizeY-5);
+        graphGraphics.drawString("+"+graphVariance+"%",2,10);
+        graphGraphics.drawString("-"+graphVariance+"%",2,graphSizeY-5);
         graphGraphics.setColor(Color.DARK_GRAY);
 
         Graphics2D g2 = (Graphics2D) graphGraphics;
@@ -229,7 +229,7 @@ public class UserFrame extends JFrame implements KeyListener {
         double ppp = (value - minheight)/(maxheight-minheight);
         double perc = ((maxheight-minheight)-(maxheight-value));
         double p = (float)(maxheight-minheight)/(float)((maxheight-minheight)-(maxheight-value));
-        System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
+//        System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
         return ppp;
 
 //        double p = 100 * value / openingPrice;

@@ -15,7 +15,14 @@ public class mainDriver {
     public mainDriver() throws Exception {
         UserFrame frame;
         frame = new UserFrame();
-
+//        frame.openingPrice = 50;
+//        frame.enterData(50.0f,10);
+//        frame.enterData(50.1f,20);
+//        frame.enterData(50.2f,330);
+//        frame.enterData(50.3f,40);
+//        frame.enterData(49.6f,50);
+//        frame.enterData(49.5f,60);
+//        frame.enterData(49.7f,70);
         DataController controller;
         controller = new DataController(frame);
         controller.getData();
