@@ -16,6 +16,7 @@ import java.io.IOException;
 public class DataController {
     Element data;
     UserFrame Frame;
+    String currentSecurity = "INTC US Equity";
     RequestResponse rr;
     Message message;
     boolean paused = false;
@@ -54,6 +55,7 @@ public class DataController {
                         }
                         else if (tempEvent.eventType.equals("next day")){
                             System.out.println("NEXT DAY");
+                            advanceDay();
                         }
 
 
@@ -73,8 +75,20 @@ public class DataController {
             }
         });
     }
+    public void advanceDay() {
+        minutesElapsed = 0;
+        try {
+            getData("MSFT US Equity",11,8);
+        }
+        catch (Exception e){
+        }
+        Frame.resetGraph();
+    }
     public void advanceMinute(){
-        if(data.numValues() < minutesElapsed) return;
+        if(data.numValues() <= minutesElapsed) {
+            advanceDay();
+            return;
+        }
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
         String date = getDate(time.toString());
@@ -89,8 +103,8 @@ public class DataController {
         Frame.updateTime(current);
         minutesElapsed++;
     }
-    public void getData() throws Exception {
-        rr.getSecurityData("INTC US Equity", 11, 7);
+    public void getData(String security, int month,int day) throws Exception {
+        rr.getSecurityData(security, month, day);
         message = rr.getMessage();
         //message.print(System.out);
     }
@@ -102,6 +116,7 @@ public class DataController {
     }
     public void changeData(){
         data = message.getElement("barData").getElement("barTickData");
+
     }
 
     int timer = 0;

@@ -26,7 +26,7 @@ public class mainDriver {
 //        frame.enterData(49.7f,70);
         DataController controller;
         controller = new DataController(frame);
-        controller.getData();
+        controller.getData("INTC US Equity",11,7);
         controller.startTimer();
         //RequestResponse rr = new RequestResponse();
         //rr.getSecurityData("F US Equity", 11, 7);
