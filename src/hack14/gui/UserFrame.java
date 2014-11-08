@@ -3,6 +3,8 @@ package hack14.gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -19,10 +21,12 @@ public class UserFrame extends JFrame implements KeyListener {
     private BufferedImage graph;
     private Graphics graphGraphics;
     private JLabel graphLabel;
-    private	JTable table;
+    private JTable table;
     private JPanel framePanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
+    private JPanel bottomLeftPanel;
+    private JPanel bottomRightPanel;
     private DefaultTableModel model;
     private InputEvent inEvent;
     private GridBagConstraints constraints;
@@ -32,15 +36,22 @@ public class UserFrame extends JFrame implements KeyListener {
     public UserFrame() {
         framePanel = new JPanel();
         topPanel = new JPanel();
-        // Create columns names
-        String columnNames[] = { "Column 1", "Column 2", "Column 3" };
-        // Create some data
+        bottomPanel = new JPanel();
+        bottomLeftPanel = new JPanel();
+        bottomRightPanel = new JPanel();
+        bottomPanel.setLayout(new GridLayout(1,0));
+        bottomPanel.add(bottomLeftPanel);
+        bottomPanel.add(bottomRightPanel);
+        framePanel.setLayout(new GridLayout(0, 1));
+        framePanel.add(topPanel);
+        framePanel.add(bottomPanel);
+
+        String columnNames[] = {"Column 1", "Column 2", "Column 3"};
         String dataValues[][] =
                 {
-                        { "SYMBOL", "OWNED", "VALUE" },
-                        { "IBM", "2", "143.3" },
-                        { "MSFT", "4", "246.7" },
-
+                        {"SYMBOL", "OWNED", "VALUE"},
+                        {"IBM", "2", "143.3"},
+                        {"MSFT", "4", "246.7"},
                 };
 
 //        DefaultTableModel model = new DefaultTableModel(data, columnNames)
@@ -49,18 +60,18 @@ public class UserFrame extends JFrame implements KeyListener {
         table = getJTable();
         table.setEnabled(false);
 
-        topPanel.setLayout( new FlowLayout() );
-        getContentPane().add( topPanel );
+        topPanel.setLayout(new GridLayout(1,0));
+        getContentPane().add(framePanel);
         inEvent = new InputEvent();
         getScreenSize();
         addKeyListener(this);
-//        this.setUndecorated(true);
+        this.setUndecorated(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setSize(windowSizeX, windowSizeY);
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridheight = 4;
-        constraints.gridwidth = 2;
+        this.setLayout(new FlowLayout());
+//        GridBagConstraints constraints = new GridBagConstraints();
+//        constraints.gridheight = 4;
+//        constraints.gridwidth = 2;
         this.setVisible(true);
         initGraph();
 
@@ -69,16 +80,14 @@ public class UserFrame extends JFrame implements KeyListener {
     //http://stackoverflow.com/questions/3179136/jtable-how-to-refresh-table-model-after-insert-delete-or-update-the-data
     private JTable getJTable() {
         JTable jTable = null;
-        String[] colName = { "SYMBOL", "OWNED", "VALUE" };
-        if (jTable == null) {
+        String[] colName = {"SYMBOL", "OWNED", "VALUE"};
             jTable = new JTable() {
                 public boolean isCellEditable(int nRow, int nCol) {
                     return false;
                 }
-            };
-        }
-        DefaultTableModel contactTableModel = (DefaultTableModel) jTable
-                .getModel();
+
+        };
+        DefaultTableModel contactTableModel = (DefaultTableModel) jTable.getModel();
         contactTableModel.setColumnIdentifiers(colName);
         jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         return jTable;
@@ -91,15 +100,35 @@ public class UserFrame extends JFrame implements KeyListener {
         topPanel.add(graphLabel);
         topPanel.add(table);
 
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 0.5;
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        topPanel.add(new JButton(),constraints);
-        topPanel.add(new JButton(),constraints);
-        topPanel.add(new JButton(),constraints);
+//        constraints.fill = GridBagConstraints.HORIZONTAL;
+//        constraints.weightx = 0.5;
+//        constraints.gridx = 1;
+//        constraints.gridy = 0;
+        ActionListener buttonListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if(hasEvent) return;
+                String s = JOptionPane.showInputDialog(null, "which stock");
+                inEvent.eventType = "buy";
+                inEvent.field1 = s;
+                System.out.printf("buying the stock'%s'.\n", s);
+                String s2 = JOptionPane.showInputDialog(null, "how much");
+                inEvent.field2 = s2;
+                System.out.printf("quantity is '%s'.\n", s2);
+                hasEvent = true;
+            }
+        };
+        JButton b1 = new JButton("a");
+        b1.addActionListener(buttonListener);
+        JButton b2 = new JButton("f");
+        JButton b3 = new JButton("f");
+        bottomLeftPanel.add(b1);
+        bottomLeftPanel.add(b2);
+        bottomRightPanel.add(b3);
 //        table.setModel(new DefaultTableModel());
         model = (DefaultTableModel) table.getModel();
+        model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE"});
         model.addRow(new Object[]{"AAPL", "8", "155.4"});
         model.addRow(new Object[]{"MSFT", "2", "234"});
         model.addRow(new Object[]{"GOOG", "1", "142"});
@@ -107,7 +136,7 @@ public class UserFrame extends JFrame implements KeyListener {
         model.fireTableDataChanged();//call this whenever data changes in table
         graphGraphics = graph.createGraphics();
         graphGraphics.setColor(Color.BLACK);
-        graphGraphics.fillRect(0, 0, graphSizeX-1, graphSizeY-1);
+        graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
         drawBackground();
         this.pack();
     }
@@ -121,7 +150,11 @@ public class UserFrame extends JFrame implements KeyListener {
     }
 
     public void startNewDay() {
-
+        //reset graph
+        graphGraphics.setColor(Color.BLACK);
+        graphGraphics.fillRect(0, 0, graphSizeX, graphSizeY);
+        graphLabel.imageUpdate(graph, 0, 0, 0, windowSizeX, windowSizeY);
+        this.repaint();
     }
 
     public void graphNewStock(double openingPrice) {
@@ -170,7 +203,7 @@ public class UserFrame extends JFrame implements KeyListener {
     }
 
     public InputEvent getEvent() {
-        if(!hasEvent) return null;
+        if (!hasEvent) return null;
         hasEvent = false;
         return inEvent;
 
@@ -188,11 +221,11 @@ public class UserFrame extends JFrame implements KeyListener {
         }
         if (hasEvent) return;
         else if (e.getKeyCode() == KeyEvent.VK_B) {
-            String s = JOptionPane.showInputDialog(this, "which stock");
+            String s = JOptionPane.showInputDialog(null, "which stock");
             inEvent.eventType = "buy";
             inEvent.field1 = s;
             System.out.printf("buying the stock'%s'.\n", s);
-            String s2 = JOptionPane.showInputDialog(this, "how much");
+            String s2 = JOptionPane.showInputDialog(null, "how much");
             inEvent.field2 = s2;
             System.out.printf("quantity is '%s'.\n", s2);
             hasEvent = true;
