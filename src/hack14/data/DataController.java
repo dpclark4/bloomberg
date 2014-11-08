@@ -74,6 +74,7 @@ public class DataController {
         });
     }
     public void advanceMinute(){
+        if(data.numValues() < minutesElapsed) return;
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
         String date = getDate(time.toString());
@@ -102,48 +103,7 @@ public class DataController {
     public void changeData(){
         data = message.getElement("barData").getElement("barTickData");
     }
-    public void testFrame() throws InterruptedException, IOException {
 
-        Element data = message.getElement("barData").getElement("barTickData");
-        int numbars = data.numValues();
-       // System.out.println("numbars" + numbars);
-       // message.print(System.out);
-
-        for(int i = 0; i < numbars; i++){
-            Element bar = data.getValueAsElement(i);
-            Datetime time = bar.getElementAsDate("time");
-            String date = getDate(time.toString());
-            String current = getTime(time.toString());
-            double open = bar.getElementAsFloat64("high");
-            System.out.println(open);
-            if(i == 0) {
-                Frame.openingPrice = open;
-            }
-            if(Frame.getEvent() == null) {
-                Frame.enterData(open, i);
-                Frame.updateDate(date);
-                Frame.updateTime(current);
-                Thread.sleep(50);
-            }
-            else if(Frame.getEvent().equals("play")) {
-                paused = false;
-                if(!paused) {
-                    Frame.enterData(open, i);
-                    Frame.updateDate(date);
-                    Frame.updateTime(current);
-                    Thread.sleep(50);
-                }
-            }
-            else if(Frame.getEvent().equals("paused")){
-                paused = true;
-                while(paused){
-
-                }
-            }
-
-        }
-
-    }
     int timer = 0;
     public void timer(){
         Element data = message.getElement("barData").getElement("barTickData");

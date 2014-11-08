@@ -33,7 +33,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
     public double openingPrice;
-    public int graphVariance = 1;
+    public int graphVariance = 5;
 //stuf
     public UserFrame() {
         framePanel = new JPanel();
@@ -192,8 +192,8 @@ public class UserFrame extends JFrame implements KeyListener {
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
         graphGraphics.setColor(Color.YELLOW);
-        graphGraphics.drawString("+5%",2,10);
-        graphGraphics.drawString("-5%",2,graphSizeY-5);
+        graphGraphics.drawString("+"+graphVariance+"%",2,10);
+        graphGraphics.drawString("-"+graphVariance+"%",2,graphSizeY-5);
         graphGraphics.setColor(Color.DARK_GRAY);
 
         Graphics2D g2 = (Graphics2D) graphGraphics;
@@ -265,7 +265,7 @@ public class UserFrame extends JFrame implements KeyListener {
         //System.out.printf("drawing at %d, %d\n", curX, curY);
         graphGraphics.setColor(Color.GREEN);
         graphGraphics.fillRect(curX, curY, 4, 4);
-//        graphGraphics.drawLine(lastX, lastY, curX, curY);
+        graphGraphics.drawLine(lastX, lastY, curX, curY);
         graphLabel.imageUpdate(graph, 0, 0, 0, windowSizeX, windowSizeY);
         this.repaint();
         lastX = curX;
