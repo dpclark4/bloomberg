@@ -1,10 +1,9 @@
-package hack14.net;//comment change223
+//comment change22
 
     import com.bloomberglp.blpapi.*;
 
 public class RequestResponseParadigm {
-
-        public RequestResponseParadigm() throws Exception {
+        public static void main(String[] args) throws Exception {
             SessionOptions sessionOptions = new SessionOptions();
             sessionOptions.setServerHost("10.8.8.1");
             sessionOptions.setServerPort(8194);
@@ -19,37 +18,46 @@ public class RequestResponseParadigm {
                 System.exit(1);
             }
             CorrelationID requestID  = new CorrelationID(1);
-            Service refDataService = session.getService("//blp/refdata");
-            Request request = refDataService.createRequest("IntradayBarRequest");
-            request.set("security", "DJI Index");
+            Service       refDataSvc = session.getService("//blp/refdata");
+            Request       request    =
+                    refDataSvc.createRequest("IntradayBarRequest");
+            //request.append("securities", "F US Equity");
+            //request.append("fields", "PX_LAST");
+            //request.set("security", "CCMP Index");
+            request.set("security", "F US Equity");
             request.set("eventType", "TRADE");
             request.set("interval", 60); // bar interval in minutes
-            request.set("startDateTime", new Datetime(2014, 9, 26, 13, 30, 0, 0));
-            request.set("endDateTime", new Datetime(2014, 9, 26, 21, 30, 0, 0));            session.sendRequest(request, requestID);
+            request.set("startDateTime", new Datetime(2014, 11, 7, 12, 0, 0, 0));
+            request.set("endDateTime",   new Datetime(2014, 11, 7, 23, 0, 0, 0));
+            session.sendRequest(request, requestID);
             boolean continueToLoop = true;
             while (continueToLoop) {
                 Event event = session.nextEvent();
+
                 switch (event.eventType().intValue()) {
-                    case Event.EventType.Constants.RESPONSE: // final event
+                    case Event.EventType.Constants.RESPONSE:
                         continueToLoop = false;               // fall through
                     case Event.EventType.Constants.PARTIAL_RESPONSE:
-                        handleResponseEvent(event,frame);
+                        handleResponseEvent(event);
                         break;
                     default:
-                        handleOtherEvent(event,frame);
+                        handleOtherEvent(event);
                         break;
                 } }
         }
-        private static void handleResponseEvent(Event event, UserFrame frame) throws Exception { System.out.println("EventType =" + event.eventType()); MessageIterator iter = event.messageIterator();
+        private static void handleResponseEvent(Event event) throws Exception { System.out.println("EventType =" + event.eventType()); MessageIterator iter = event.messageIterator();
             while (iter.hasNext()) {
                 Message message = iter.next();
                 System.out.println("correlationID=" +
                         message.correlationID());
                 System.out.println("messageType  =" +
                         message.messageType());
+                Element data = message.getElement("barData").getElement("barTickData");
+                Element bar = data.getValueAsElement(0);
+                System.out.println("open: " + bar.getElementAsFloat64("open"));
                 message.print(System.out);
             } }
-        private static void handleOtherEvent(Event event, UserFrame frame) throws Exception
+        private static void handleOtherEvent(Event event) throws Exception
         {
             System.out.println("EventType=" + event.eventType());
             MessageIterator iter = event.messageIterator();
