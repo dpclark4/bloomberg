@@ -9,9 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
-/**
- * Created by bean on 11/7/2014.
- */
 public class UserFrame extends JFrame implements KeyListener {
     private int windowSizeX, windowSizeY, graphSizeX, graphSizeY;
     private int graphBottom, graphLeft;
@@ -36,6 +33,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
     public double openingPrice;
+    public int graphVariance = 1;
 
     public UserFrame() {
         framePanel = new JPanel();
@@ -224,12 +222,16 @@ public class UserFrame extends JFrame implements KeyListener {
 
     //converts a double of the stock price to a scale of +- 5% of opening price. returns 0 for -5, 100 for +5, etc.
     public double valTo55Graph(double value) {
+        double maxheight = (1.00 + (float)graphVariance*.01)*openingPrice;
+        double minheight = maxheight - openingPrice;
+        double p = (value - minheight/(maxheight-minheight));
+        System.out.printf(" p is %f.\n", p);
+        return p;
 
-        double p = 100 * value / openingPrice;
-//        System.out.printf(" p is %f.\n", p);
-        if (p > 105) return 101;//off the charts high
-        if (p < 95) return -1;//off the charts low
-        return (100 - ((p - 95) * 10));
+//        double p = 100 * value / openingPrice;
+//        if (p > 100+graphVariance) return 101;//off the charts high
+//        if (p < 100-graphVariance) return -1;//off the charts low
+//        return (100 - ((p - (100-graphVariance)) * 10));
     }
 
     public double minuteToXPercentage(int minutesElapsed) {
@@ -240,7 +242,7 @@ public class UserFrame extends JFrame implements KeyListener {
 
     public int convertToGraphPixelsY(double heightPercentage) {
 //        System.out.printf("width percentage is %f.\n", heightPercentage);
-        return (int) (graphBottom + (heightPercentage / 100) * graphSizeY);
+        return (int) ((float)graphSizeY - (heightPercentage / 100.0f) * (float) graphSizeY);
     }
 
     public int convertToGraphPixelsX(double widthPercentage) {
@@ -255,8 +257,8 @@ public class UserFrame extends JFrame implements KeyListener {
 
         //System.out.printf("drawing at %d, %d\n", curX, curY);
         graphGraphics.setColor(Color.GREEN);
-        graphGraphics.fillRect(curX, curY, 2, 2);
-        graphGraphics.drawLine(lastX, lastY, curX, curY);
+        graphGraphics.fillRect(curX, curY, 4, 4);
+//        graphGraphics.drawLine(lastX, lastY, curX, curY);
         graphLabel.imageUpdate(graph, 0, 0, 0, windowSizeX, windowSizeY);
         this.repaint();
         lastX = curX;

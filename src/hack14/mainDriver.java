@@ -15,16 +15,16 @@ public class mainDriver {
     public mainDriver() throws Exception {
         UserFrame frame;
         frame = new UserFrame();
-        frame.openingPrice = 555;
-        frame.enterData(543,0);
-        frame.enterData(555,11);
-        frame.enterData(551,22);
-        frame.enterData(552,33);
-        frame.enterData(557,44);
-        frame.enterData(573,55);
-        frame.enterData(554,66);
-        frame.enterData(552,77);
-        frame.enterData(551,88);
+        frame.openingPrice = 100;
+        frame.enterData(100,0);
+        frame.enterData(100.5,11);
+        frame.enterData(101,22);
+        frame.enterData(101.5,33);
+        frame.enterData(99.5,44);
+        frame.enterData(99.75,55);
+        frame.enterData(106,66);
+        frame.enterData(107,77);
+        frame.enterData(98,88);
         //DataController controller;
         //controller = new DataController();
         //RequestResponse rr = new RequestResponse();
