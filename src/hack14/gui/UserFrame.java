@@ -36,6 +36,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
     public double openingPrice;
+    public int time = 0;
 
     public UserFrame() {
         framePanel = new JPanel();
@@ -148,7 +149,7 @@ public class UserFrame extends JFrame implements KeyListener {
         dateLabel = new JLabel("Date:");
         dateLabel.setPreferredSize(new Dimension(300,75));
         dateLabel.setFont(new Font("Serif", Font.PLAIN, 26));
-        timeLabel = new JLabel("Time:");
+        timeLabel = new JLabel("Time:" + time);
         timeLabel.setPreferredSize(new Dimension(300,75));
         timeLabel.setFont(new Font("Serif", Font.PLAIN, 26));
         moneyLabel = new JLabel("$:");
@@ -249,6 +250,7 @@ public class UserFrame extends JFrame implements KeyListener {
     }
 
     public void enterData(double value, int minutesElapsed) {
+        time = minutesElapsed;
         graphGraphics.setColor(Color.BLUE);
         int curX = convertToGraphPixelsX(minuteToXPercentage(minutesElapsed));
         int curY = convertToGraphPixelsY(valTo55Graph(value));

@@ -2,6 +2,7 @@ package hack14;
 
 import hack14.data.DataController;
 import hack14.gui.UserFrame;
+//import hack14.gui.graph;
 import com.bloomberglp.blpapi.*;
 import hack14.net.RequestResponse;
 
@@ -15,20 +16,16 @@ public class mainDriver {
     public mainDriver() throws Exception {
         UserFrame frame;
         frame = new UserFrame();
-        frame.openingPrice = 555;
-        frame.enterData(543,0);
-        frame.enterData(555,11);
-        frame.enterData(551,22);
-        frame.enterData(552,33);
-        frame.enterData(557,44);
-        frame.enterData(573,55);
-        frame.enterData(554,66);
-        frame.enterData(552,77);
-        frame.enterData(551,88);
-        //DataController controller;
-        //controller = new DataController();
-        //RequestResponse rr = new RequestResponse();
-        //rr.getSecurityData("F US Equity", 11, 7);
+
+
+        DataController controller;
+        controller = new DataController(frame);
+        //controller.testFrame();
+        controller.getData();
+        controller.testFrame();
+
+
+
         //ArrayList<Message> temp = rr.getMessages();
         //Element data = temp.get(0).getElement("barData").getElement("barTickData");
         //Element bar = data.getValueAsElement(0);

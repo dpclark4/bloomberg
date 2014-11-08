@@ -37,7 +37,7 @@ public class RequestResponse {
         Request request = refDataService.createRequest("IntradayBarRequest");
         request.set("security", security);
         request.set("eventType", "TRADE");
-        request.set("interval", 60); // bar interval in minutes
+        request.set("interval", 1); // bar interval in minutes
         request.set("startDateTime", new Datetime(2014, month, day, 12, 0, 0, 0));
         request.set("endDateTime", new Datetime(2014, month, day, 23, 0, 0, 0));
         session.sendRequest(request, requestID);
