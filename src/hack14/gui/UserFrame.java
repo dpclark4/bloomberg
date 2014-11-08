@@ -1,5 +1,7 @@
 package hack14.gui;
 
+import hack14.data.DataController;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -33,8 +35,9 @@ public class UserFrame extends JFrame implements KeyListener {
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
     public double openingPrice;
-    public int graphVariance = 1;
-//stuf
+    public int graphVariance = 5;
+    public String time = "";
+    public String date = "";
     public UserFrame() {
         framePanel = new JPanel();
         topPanel = new JPanel();
@@ -229,7 +232,7 @@ public class UserFrame extends JFrame implements KeyListener {
         double ppp = (value - minheight)/(maxheight-minheight);
         double perc = ((maxheight-minheight)-(maxheight-value));
         double p = (float)(maxheight-minheight)/(float)((maxheight-minheight)-(maxheight-value));
-        System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
+        //System.out.printf(" p is %f, %f, %f\n", ppp, maxheight, minheight);
         return ppp;
 
 //        double p = 100 * value / openingPrice;
