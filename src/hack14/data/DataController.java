@@ -28,7 +28,7 @@ public class DataController {
     }
     public void startTimer(){
         changeData();
-        Element data = message.getElement("barData").getElement("barTickData");
+        //Element data = message.getElement("barData").getElement("barTickData");
         EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -57,17 +57,9 @@ public class DataController {
                             System.out.println("NEXT DAY");
                             advanceDay();
                         }
-
-
                         if(!paused) {
                             advanceMinute();
-
-
-
-
-
                         }
-
                     }
                 };
                 Timer timer = new Timer(50, actionListener);
@@ -78,17 +70,19 @@ public class DataController {
     public void advanceDay() {
         minutesElapsed = 0;
         try {
+            rr = new RequestResponse();
             getData("MSFT US Equity",11,7);
+            changeData();
         }
         catch (Exception e){
         }
         Frame.resetGraph();
-        changeData();00.020.
-    }//j
+
+    }
     public void advanceMinute(){
         if(data.numValues() <= minutesElapsed) {
             advanceDay();
-            return;
+            System.out.println("HERE");
         }
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
@@ -120,14 +114,6 @@ public class DataController {
 
     }
 
-    int timer = 0;
-    public void timer(){
-        Element data = message.getElement("barData").getElement("barTickData");
-        int numbars = data.numValues();
-        if(paused = false){
-
-        }
-    }
     public String getDate(String input) {
         StringBuilder temp = new StringBuilder();
         temp.append(input.charAt(5));
