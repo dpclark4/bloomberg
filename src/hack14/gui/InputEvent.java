@@ -9,3 +9,4 @@ public class InputEvent {
     public String field2;
 
 }
+

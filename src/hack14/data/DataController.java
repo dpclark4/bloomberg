@@ -4,19 +4,89 @@ package hack14.data;
  * Created by bean on 11/8/2014.
  */
 import com.bloomberglp.blpapi.*;
+import hack14.gui.InputEvent;
 import hack14.gui.UserFrame;
 import hack14.net.RequestResponse;
-
+import java.awt.EventQueue;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class DataController {
+    Element data;
     UserFrame Frame;
     RequestResponse rr;
     Message message;
     boolean paused = false;
+    int minutesElapsed = 0;
     public DataController(UserFrame frame) throws Exception {
         Frame = frame;
         rr = new RequestResponse();
+
+    }
+    public void startTimer(){
+        changeData();
+        Element data = message.getElement("barData").getElement("barTickData");
+        EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                ActionListener actionListener = new ActionListener() {
+
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        InputEvent tempEvent = Frame.getEvent();
+
+                        if(tempEvent.eventType.equals("none")) {
+
+                        }
+                        else if (tempEvent.eventType.equals("play")){
+                            paused = false;
+                        }
+                        else if (tempEvent.eventType.equals("pause")){
+                            paused = true;
+                        }
+                        else if (tempEvent.eventType.equals("buy")){
+                            System.out.println("BUYING");
+                        }
+                        else if (tempEvent.eventType.equals("sell")){
+                            System.out.println("SELL");
+                        }
+                        else if (tempEvent.eventType.equals("next day")){
+                            System.out.println("NEXT DAY");
+                        }
+
+
+                        if(!paused) {
+                            advanceMinute();
+
+
+
+
+
+                        }
+
+                    }
+                };
+                Timer timer = new Timer(50, actionListener);
+                timer.start();
+            }
+        });
+    }
+    public void advanceMinute(){
+        Element bar = data.getValueAsElement(minutesElapsed);
+        Datetime time = bar.getElementAsDate("time");
+        String date = getDate(time.toString());
+        String current = getTime(time.toString());
+        double open = bar.getElementAsFloat64("high");
+        System.out.println(open);
+        if( minutesElapsed == 0) {
+            Frame.openingPrice = open;
+        }
+        Frame.enterData(open, minutesElapsed);
+        Frame.updateDate(date);
+        Frame.updateTime(current);
+        minutesElapsed++;
     }
     public void getData() throws Exception {
         rr.getSecurityData("INTC US Equity", 11, 7);
@@ -28,6 +98,9 @@ public class DataController {
     }
     public void enablePause(){
         paused = false;
+    }
+    public void changeData(){
+        data = message.getElement("barData").getElement("barTickData");
     }
     public void testFrame() throws InterruptedException, IOException {
 

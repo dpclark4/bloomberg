@@ -72,6 +72,9 @@ public class UserFrame extends JFrame implements KeyListener {
 //        topPanel.setLayout(new GridBagLayout());
         getContentPane().add(framePanel);
         inEvent = new InputEvent();
+        inEvent.eventType = "";
+        inEvent.field1 = "";
+        inEvent.field2 = "";
         getScreenSize();
         addKeyListener(this);
         this.setUndecorated(true);
@@ -270,7 +273,9 @@ public class UserFrame extends JFrame implements KeyListener {
     }
 
     public InputEvent getEvent() {
-        if (!hasEvent) return null;
+        if (!hasEvent){
+            inEvent.eventType = "none";
+        }
         hasEvent = false;
         return inEvent;
 

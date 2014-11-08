@@ -2,6 +2,7 @@ package hack14;
 
 import hack14.data.DataController;
 import hack14.gui.UserFrame;
+import hack14.gui.UserFrame;
 import com.bloomberglp.blpapi.*;
 import hack14.net.RequestResponse;
 
@@ -26,7 +27,7 @@ public class mainDriver {
         DataController controller;
         controller = new DataController(frame);
         controller.getData();
-        controller.testFrame();
+        controller.startTimer();
         //RequestResponse rr = new RequestResponse();
         //rr.getSecurityData("F US Equity", 11, 7);
         //ArrayList<Message> temp = rr.getMessages();
