@@ -73,7 +73,11 @@ public class DataController {
     }
     int timer = 0;
     public void timer(){
+        Element data = message.getElement("barData").getElement("barTickData");
+        int numbars = data.numValues();
+        if(paused = false){
 
+        }
     }
     public String getDate(String input) {
         StringBuilder temp = new StringBuilder();
