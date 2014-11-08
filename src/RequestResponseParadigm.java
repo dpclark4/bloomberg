@@ -1,14 +1,8 @@
 //comment change22
 
-    import com.bloomberglp.blpapi.CorrelationID;
-    import com.bloomberglp.blpapi.Event;
-    import com.bloomberglp.blpapi.Message;
-    import com.bloomberglp.blpapi.MessageIterator;
-    import com.bloomberglp.blpapi.Request;
-    import com.bloomberglp.blpapi.Service;
-    import com.bloomberglp.blpapi.Session;
-    import com.bloomberglp.blpapi.SessionOptions;
-    public class RequestResponseParadigm {
+    import com.bloomberglp.blpapi.*;
+
+public class RequestResponseParadigm {
         public static void main(String[] args) throws Exception {
             SessionOptions sessionOptions = new SessionOptions();
             sessionOptions.setServerHost("10.8.8.1");
@@ -24,12 +18,13 @@
                 System.exit(1);
             }
             CorrelationID requestID  = new CorrelationID(1);
-            Service       refDataSvc = session.getService("//blp/refdata");
-            Request       request    =
-                    refDataSvc.createRequest("ReferenceDataRequest");
-            request.append("securities", "IBM US Equity");
-            request.append("fields", "PX_LAST");
-            session.sendRequest(request, requestID);
+            Service refDataService = session.getService("//blp/refdata");
+            Request request = refDataService.createRequest("IntradayBarRequest");
+            request.set("security", "DJI Index");
+            request.set("eventType", "TRADE");
+            request.set("interval", 60); // bar interval in minutes
+            request.set("startDateTime", new Datetime(2014, 9, 26, 13, 30, 0, 0));
+            request.set("endDateTime", new Datetime(2014, 9, 26, 21, 30, 0, 0));            session.sendRequest(request, requestID);
             boolean continueToLoop = true;
             while (continueToLoop) {
                 Event event = session.nextEvent();
