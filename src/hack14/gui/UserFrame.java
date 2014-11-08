@@ -25,9 +25,11 @@ public class UserFrame extends JFrame implements KeyListener {
     private JPanel framePanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
-    private JPanel bottomLeftPanel;
-    private JPanel bottomRightPanel;
+    private JPanel bottomLeftPanel,topLeftPanel;
+    private JPanel topRightLeftPanel,topRightRightPanel;
+    private JPanel bottomRightPanel,topRightPanel;
     private DefaultTableModel model;
+    private ActionListener buyListener,sellListener,nextDayListener,playListener,pauseListener;
     private InputEvent inEvent;
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
@@ -38,7 +40,11 @@ public class UserFrame extends JFrame implements KeyListener {
         topPanel = new JPanel();
         bottomPanel = new JPanel();
         bottomLeftPanel = new JPanel();
+        topLeftPanel = new JPanel();
         bottomRightPanel = new JPanel();
+        topRightPanel = new JPanel();
+        topRightLeftPanel = new JPanel();
+        topRightRightPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(1,0));
         bottomPanel.add(bottomLeftPanel);
         bottomPanel.add(bottomRightPanel);
@@ -97,76 +103,19 @@ public class UserFrame extends JFrame implements KeyListener {
     private void initGraph() {
         graph = new BufferedImage(graphSizeX, graphSizeY, BufferedImage.TYPE_INT_ARGB);
         graphLabel = new JLabel(new ImageIcon(graph));
-        topPanel.add(graphLabel);
-        topPanel.add(table);
+        topLeftPanel.add(graphLabel);
+        topRightPanel.setLayout(new GridLayout(1,0));
+        topRightPanel.add(topRightLeftPanel);
+        topRightPanel.add(topRightRightPanel);
+        topRightLeftPanel.add(table);
+        topPanel.add(topLeftPanel);
+        topPanel.add(topRightPanel);
 
 //        constraints.fill = GridBagConstraints.HORIZONTAL;
 //        constraints.weightx = 0.5;
 //        constraints.gridx = 1;
 //        constraints.gridy = 0;
-        ActionListener buyListener = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if(hasEvent) return;
-                String s = JOptionPane.showInputDialog(null, "which stock");
-                inEvent.eventType = "buy";
-                inEvent.field1 = s;
-                System.out.printf("buying the stock'%s'.\n", s);
-                String s2 = JOptionPane.showInputDialog(null, "how many");
-                inEvent.field2 = s2;
-                System.out.printf("quantity is '%s'.\n", s2);
-                hasEvent = true;
-            }
-    };
-        ActionListener sellListener = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if(hasEvent) return;
-                String s = JOptionPane.showInputDialog(null, "which stock");
-                inEvent.eventType = "sell";
-                inEvent.field1 = s;
-                System.out.printf("selling the stock'%s'.\n", s);
-                String s2 = JOptionPane.showInputDialog(null, "how many");
-                inEvent.field2 = s2;
-                System.out.printf("quantity is '%s'.\n", s2);
-                hasEvent = true;
-            }
-        };
-        ActionListener playListener = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if(hasEvent) return;
-                inEvent.eventType = "play";
-                inEvent.field1 = "";
-                inEvent.field2 = "";
-                hasEvent = true;
-            }
-        };
-        ActionListener pauseListener = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if(hasEvent) return;
-                inEvent.eventType = "pause";
-                inEvent.field1 = "";
-                inEvent.field2 = "";
-                hasEvent = true;
-            }
-        };
-        ActionListener nextDayListener = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if(hasEvent) return;
-                inEvent.eventType = "next day";
-                inEvent.field1 = "";
-                inEvent.field2 = "";
-                hasEvent = true;
-            }
-        };
+        initListeners();
         JButton b1 = new JButton("Play");
         b1.addActionListener(playListener);
         JButton b2 = new JButton("Pause");
@@ -188,6 +137,7 @@ public class UserFrame extends JFrame implements KeyListener {
         draw55Graph();
         this.pack();
     }
+
     private void draw55Graph(){
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
@@ -207,8 +157,8 @@ public class UserFrame extends JFrame implements KeyListener {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         windowSizeX = (int) screenSize.getWidth();
         windowSizeY = (int) screenSize.getHeight();
-        graphSizeX = windowSizeX / 2;
-        graphSizeY = windowSizeY / 2;
+        graphSizeX = (int)(windowSizeX*.75);
+        graphSizeY = (int)(windowSizeY*.75);
     }
 
     public void startNewDay() {
@@ -304,4 +254,70 @@ public class UserFrame extends JFrame implements KeyListener {
 //    public void paint(Graphics g){
 //        g.drawImage(graph, 0, 0, null);
 //    }
+private void initListeners(){
+    buyListener = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(hasEvent) return;
+            String s = JOptionPane.showInputDialog(null, "which stock");
+            inEvent.eventType = "buy";
+            inEvent.field1 = s;
+            System.out.printf("buying the stock'%s'.\n", s);
+            String s2 = JOptionPane.showInputDialog(null, "how many");
+            inEvent.field2 = s2;
+            System.out.printf("quantity is '%s'.\n", s2);
+            hasEvent = true;
+        }
+    };
+    sellListener = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(hasEvent) return;
+            String s = JOptionPane.showInputDialog(null, "which stock");
+            inEvent.eventType = "sell";
+            inEvent.field1 = s;
+            System.out.printf("selling the stock'%s'.\n", s);
+            String s2 = JOptionPane.showInputDialog(null, "how many");
+            inEvent.field2 = s2;
+            System.out.printf("quantity is '%s'.\n", s2);
+            hasEvent = true;
+        }
+    };
+    playListener = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(hasEvent) return;
+            inEvent.eventType = "play";
+            inEvent.field1 = "";
+            inEvent.field2 = "";
+            hasEvent = true;
+        }
+    };
+    pauseListener = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(hasEvent) return;
+            inEvent.eventType = "pause";
+            inEvent.field1 = "";
+            inEvent.field2 = "";
+            hasEvent = true;
+        }
+    };
+    nextDayListener = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(hasEvent) return;
+            inEvent.eventType = "next day";
+            inEvent.field1 = "";
+            inEvent.field2 = "";
+            hasEvent = true;
+        }
+    };
+
+}
 }
