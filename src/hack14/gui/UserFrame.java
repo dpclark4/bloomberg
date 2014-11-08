@@ -104,7 +104,7 @@ public class UserFrame extends JFrame implements KeyListener {
 //        constraints.weightx = 0.5;
 //        constraints.gridx = 1;
 //        constraints.gridy = 0;
-        ActionListener buttonListener = new ActionListener()
+        ActionListener buyListener = new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -113,19 +113,69 @@ public class UserFrame extends JFrame implements KeyListener {
                 inEvent.eventType = "buy";
                 inEvent.field1 = s;
                 System.out.printf("buying the stock'%s'.\n", s);
-                String s2 = JOptionPane.showInputDialog(null, "how much");
+                String s2 = JOptionPane.showInputDialog(null, "how many");
+                inEvent.field2 = s2;
+                System.out.printf("quantity is '%s'.\n", s2);
+                hasEvent = true;
+            }
+    };
+        ActionListener sellListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if(hasEvent) return;
+                String s = JOptionPane.showInputDialog(null, "which stock");
+                inEvent.eventType = "sell";
+                inEvent.field1 = s;
+                System.out.printf("selling the stock'%s'.\n", s);
+                String s2 = JOptionPane.showInputDialog(null, "how many");
                 inEvent.field2 = s2;
                 System.out.printf("quantity is '%s'.\n", s2);
                 hasEvent = true;
             }
         };
-        JButton b1 = new JButton("a");
-        b1.addActionListener(buttonListener);
-        JButton b2 = new JButton("f");
-        JButton b3 = new JButton("f");
+        ActionListener playListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if(hasEvent) return;
+                inEvent.eventType = "play";
+                inEvent.field1 = "";
+                inEvent.field2 = "";
+                hasEvent = true;
+            }
+        };
+        ActionListener pauseListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if(hasEvent) return;
+                inEvent.eventType = "pause";
+                inEvent.field1 = "";
+                inEvent.field2 = "";
+                hasEvent = true;
+            }
+        };
+        ActionListener nextDayListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if(hasEvent) return;
+                inEvent.eventType = "next day";
+                inEvent.field1 = "";
+                inEvent.field2 = "";
+                hasEvent = true;
+            }
+        };
+        JButton b1 = new JButton("Play");
+        b1.addActionListener(playListener);
+        JButton b2 = new JButton("Pause");
+        b2.addActionListener(pauseListener);
+        JButton b3 = new JButton("Next Day");
+        b3.addActionListener(nextDayListener);
         bottomLeftPanel.add(b1);
         bottomLeftPanel.add(b2);
-        bottomRightPanel.add(b3);
+        bottomLeftPanel.add(b3);
 //        table.setModel(new DefaultTableModel());
         model = (DefaultTableModel) table.getModel();
         model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE"});
@@ -135,12 +185,24 @@ public class UserFrame extends JFrame implements KeyListener {
         model.removeRow(1);
         model.fireTableDataChanged();//call this whenever data changes in table
         graphGraphics = graph.createGraphics();
-        graphGraphics.setColor(Color.BLACK);
-        graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
-        drawBackground();
+        draw55Graph();
         this.pack();
     }
+    private void draw55Graph(){
+        graphGraphics.setColor(Color.BLACK);
+        graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
+        graphGraphics.setColor(Color.YELLOW);
+        graphGraphics.drawString("+5%",2,10);
+        graphGraphics.drawString("-5%",2,graphSizeY-5);
+        graphGraphics.setColor(Color.DARK_GRAY);
 
+        Graphics2D g2 = (Graphics2D) graphGraphics;
+        g2.setStroke(new BasicStroke(2));
+        g2.drawLine(0,graphSizeY/2,graphSizeX,graphSizeY/2);
+        g2.setStroke(new BasicStroke(1));
+
+
+    }
     private void getScreenSize() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         windowSizeX = (int) screenSize.getWidth();
@@ -225,7 +287,7 @@ public class UserFrame extends JFrame implements KeyListener {
             inEvent.eventType = "buy";
             inEvent.field1 = s;
             System.out.printf("buying the stock'%s'.\n", s);
-            String s2 = JOptionPane.showInputDialog(null, "how much");
+            String s2 = JOptionPane.showInputDialog(null, "how many");
             inEvent.field2 = s2;
             System.out.printf("quantity is '%s'.\n", s2);
             hasEvent = true;
@@ -238,8 +300,6 @@ public class UserFrame extends JFrame implements KeyListener {
 
     }
 
-    private void drawBackground() {
-    }
 //    @Override
 //    public void paint(Graphics g){
 //        g.drawImage(graph, 0, 0, null);
