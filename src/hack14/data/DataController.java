@@ -12,18 +12,23 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class DataController {
+    ArrayList<OwnedStock> myStock;
     Element data;
     UserFrame Frame;
+    double open;
     int currentMonth = 11;
     int currentDay = 4;
+    int liquidCash = 100000;
     String currentSecurity = "INTC US Equity";
     RequestResponse rr;
     Message message;
     boolean paused = false;
     int minutesElapsed = 0;
     public DataController(UserFrame frame) throws Exception {
+        myStock = new ArrayList<OwnedStock>();
         Frame = frame;
         rr = new RequestResponse();
 
@@ -51,6 +56,7 @@ public class DataController {
                         }
                         else if (tempEvent.eventType.equals("buy")){
                             System.out.println("BUYING");
+                            buyStock(Integer.parseInt(tempEvent.field1));
                         }
                         else if (tempEvent.eventType.equals("sell")){
                             System.out.println("SELL");
@@ -72,6 +78,28 @@ public class DataController {
             }
         });
     }
+
+    public void buyStock(int quantity){
+        if(quantity * open > liquidCash) {
+            return;
+        }
+        OwnedStock os = new OwnedStock();
+        os.s1 = currentSecurity;
+        os.s2 = Integer.toString(quantity + stockOwned());
+        os.s3 = Double.toString(open);
+        os.s4 = Double.toString(open*Integer.parseInt(os.s2));
+        myStock.add(os);
+        Frame.insertTableEntry(myStock.size(),os.s1,os.s2,os.s3,os.s4);
+    }
+
+    private int stockOwned(){
+        for (OwnedStock s : myStock) {
+            if (s.s1.equals(currentSecurity)){
+                return Integer.parseInt(s.s2);
+            }
+        }
+        return 0;
+    }
     public void changeStock(String server){
 
         try {
@@ -86,7 +114,7 @@ public class DataController {
                 Datetime time = bar.getElementAsDate("time");
                 String date = getDate(time.toString());
                 String current = getTime(time.toString());
-                double open = bar.getElementAsFloat64("high");
+                open = bar.getElementAsFloat64("high");
                 if( i == 0) {
                     Frame.openingPrice = open;
                 }
@@ -116,12 +144,13 @@ public class DataController {
     public void advanceMinute(){
         if(data.numValues() <= minutesElapsed) {
             advanceDay();
+            return;
         }
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
         String date = getDate(time.toString());
         String current = getTime(time.toString());
-        double open = bar.getElementAsFloat64("open");
+        open = bar.getElementAsFloat64("open");
         System.out.println(open);
         if( minutesElapsed == 0) {
             Frame.openingPrice = open;

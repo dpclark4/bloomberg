@@ -172,10 +172,10 @@ public class UserFrame extends JFrame implements KeyListener {
         bottomLeftBottomPanel.add(timeLabel);
 //        table.setModel(new DefaultTableModel());
         model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE","TOTAL"});
-        model.addRow(new Object[]{"AAPL", "8", "155.4","2"});
-        model.addRow(new Object[]{"MSFT", "2", "234","5"});
-        model.addRow(new Object[]{"GOOG", "1", "142","1"});
+        model.addRow(new Object[]{"SYMBOL", "OWNED", "VALUE","TOTAL VALUE"});
+//        model.addRow(new Object[]{"AAPL", "8", "155.4","2"});
+//        model.addRow(new Object[]{"MSFT", "2", "234","5"});
+//        model.addRow(new Object[]{"GOOG", "1", "142","1"});
 //        this.removeTableEntry(1);
 //        this.insertTableEntry(1,"a","b","c","d");
         model.fireTableDataChanged();//call this whenever data changes in table
@@ -208,7 +208,8 @@ public class UserFrame extends JFrame implements KeyListener {
         graphGraphics.setColor(Color.BLACK);
         graphGraphics.fillRect(0, 0, graphSizeX - 1, graphSizeY - 1);
         graphGraphics.setColor(Color.YELLOW);
-        graphGraphics.drawString("+"+graphVariance+"%",2,10);
+        graphGraphics.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        graphGraphics.drawString("+"+graphVariance+"%",2,20);
         graphGraphics.drawString("-"+graphVariance+"%",2,graphSizeY-5);
         graphGraphics.setColor(Color.DARK_GRAY);
 
@@ -339,11 +340,11 @@ private void initListeners(){
         public void actionPerformed(ActionEvent e)
         {
             if(hasEvent) return;
-            String s = JOptionPane.showInputDialog(null, "which stock");
+            String s = JOptionPane.showInputDialog(null, "Which stock would you like to buy?");
             inEvent.eventType = "buy";
             inEvent.field1 = s;
             System.out.printf("buying the stock'%s'.\n", s);
-            String s2 = JOptionPane.showInputDialog(null, "how many");
+            String s2 = JOptionPane.showInputDialog(null, "How many shares would you like to buy?");
             inEvent.field2 = s2;
             System.out.printf("quantity is '%s'.\n", s2);
             hasEvent = true;
@@ -354,11 +355,11 @@ private void initListeners(){
         public void actionPerformed(ActionEvent e)
         {
             if(hasEvent) return;
-            String s = JOptionPane.showInputDialog(null, "which stock");
+            String s = JOptionPane.showInputDialog(null, "Which stock would you like to sell?");
             inEvent.eventType = "sell";
             inEvent.field1 = s;
             System.out.printf("selling the stock'%s'.\n", s);
-            String s2 = JOptionPane.showInputDialog(null, "how many");
+            String s2 = JOptionPane.showInputDialog(null, "How many shares would you like to sell?");
             inEvent.field2 = s2;
             System.out.printf("quantity is '%s'.\n", s2);
             hasEvent = true;
