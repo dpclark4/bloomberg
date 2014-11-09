@@ -19,10 +19,10 @@ public class DataController {
     Element data;
     UserFrame Frame;
     double open;
-    int currentMonth = 11;
-    int currentDay = 4;
     int liquidCash = 100000;
-    String currentSecurity = "INTC US Equity";
+    int currentMonth = 9;
+    int currentDay = 2;
+    String currentSecurity = "INTC";
     RequestResponse rr;
     Message message;
     boolean paused = false;
@@ -101,11 +101,10 @@ public class DataController {
         return 0;
     }
     public void changeStock(String server){
-
         try {
             rr = new RequestResponse();
             currentSecurity = server;
-            getData(currentSecurity + " US Equity",currentMonth,currentDay);
+            getData(lookup(currentSecurity),currentMonth,currentDay);
 
             changeData();
             Frame.resetGraph();
@@ -120,23 +119,26 @@ public class DataController {
                 }
                 Frame.updateCurrentStock(currentSecurity);
                 Frame.enterData(open, i);
+                Frame.updateStockPrice(open);
                 Frame.updateDate(date);
                 Frame.updateTime(current);
             }
         }//t
         catch (Exception e){
-            //day+1
+            System.out.print("change weekend");
         }
 
     }
     public void advanceDay() {
         minutesElapsed = 0;
+        incrementDate();
         try {
             rr = new RequestResponse();
-            getData("MSFT US Equity",11,7);
+            getData(lookup(currentSecurity),currentMonth,currentDay);
             changeData();
         }//t
         catch (Exception e){
+            System.out.print("advance weekend ");
         }
         Frame.resetGraph();
 
@@ -146,12 +148,15 @@ public class DataController {
             advanceDay();
             return;
         }
+        System.out.println(data.numValues());
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
         String date = getDate(time.toString());
         String current = getTime(time.toString());
         open = bar.getElementAsFloat64("open");
         System.out.println(open);
+        double open = bar.getElementAsFloat64("open");
+        //System.out.println(open);
         if( minutesElapsed == 0) {
             Frame.openingPrice = open;
         }
@@ -161,6 +166,30 @@ public class DataController {
         Frame.updateDate(date);
         Frame.updateTime(current);
         minutesElapsed++;
+    }
+    public String lookup(String s){
+        String s2 = s.toUpperCase();
+        if(s2.equals("DOW JONES")){
+            return "INDU Index";
+        }
+        else if (s2.equals("NASDAQ")){
+            return "CCMP Index";
+        }
+        else if (s2.equals("S&P 500")){
+            return "SPX Index";
+        }
+        else{
+            return s2+" US Equity";
+        }
+    }
+    public void incrementDate(){
+        if(currentDay > 32){
+            currentDay = 1;
+            currentMonth += 1;
+        }
+        else{
+            currentDay += 1;
+        }
     }
     public void getData(String security, int month,int day) throws Exception {
         rr.getSecurityData(security, month, day);
@@ -175,9 +204,7 @@ public class DataController {
     }
     public void changeData(){
         data = message.getElement("barData").getElement("barTickData");
-
     }
-
     public String getDate(String input) {
         StringBuilder temp = new StringBuilder();
         temp.append(input.charAt(5));
@@ -192,7 +219,6 @@ public class DataController {
         temp.append(input.charAt(3));
         return temp.toString();
     }
-
     public String getTime(String input){
         StringBuilder temp = new StringBuilder();
         //if(input.charAt(12))
@@ -206,7 +232,4 @@ public class DataController {
         temp.append(input.charAt(15));
         return temp.toString();
     }
-
-
-
 }
