@@ -76,7 +76,9 @@ public class DataController {
 
         try {
             rr = new RequestResponse();
-            getData(server + " US Equity",currentMonth,currentDay);
+            currentSecurity = server;
+            getData(currentSecurity + " US Equity",currentMonth,currentDay);
+
             changeData();
             Frame.resetGraph();
             for(int i = 0; i < minutesElapsed; ++i){
@@ -85,9 +87,10 @@ public class DataController {
                 String date = getDate(time.toString());
                 String current = getTime(time.toString());
                 double open = bar.getElementAsFloat64("high");
-                if( minutesElapsed == 0) {
+                if( i == 0) {
                     Frame.openingPrice = open;
                 }
+                Frame.updateCurrentStock(currentSecurity);
                 Frame.enterData(open, i);
                 Frame.updateDate(date);
                 Frame.updateTime(current);
@@ -113,18 +116,19 @@ public class DataController {
     public void advanceMinute(){
         if(data.numValues() <= minutesElapsed) {
             advanceDay();
-            System.out.println("HERE");
         }
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
         String date = getDate(time.toString());
         String current = getTime(time.toString());
-        double open = bar.getElementAsFloat64("high");
+        double open = bar.getElementAsFloat64("open");
         System.out.println(open);
         if( minutesElapsed == 0) {
             Frame.openingPrice = open;
         }
+        Frame.updateCurrentStock(currentSecurity);
         Frame.enterData(open, minutesElapsed);
+        Frame.updateStockPrice(open);
         Frame.updateDate(date);
         Frame.updateTime(current);
         minutesElapsed++;

@@ -193,10 +193,10 @@ public class UserFrame extends JFrame implements KeyListener {
         timeLabel.setText("$: " + money);
     }
     public void updateCurrentStock(String ID){
-        timeLabel.setText("STOCK: " + ID);
+        currentStock.setText("" + ID);
     }
-    public void updateStockPrice(String money){
-        timeLabel.setText("VALUE: " + money);
+    public void updateStockPrice(double money){
+        stockPrice.setText(""+money);
     }
     public void removeTableEntry(int index){
         model.removeRow(index);
