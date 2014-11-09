@@ -31,7 +31,7 @@ public class DataController {
         myStock = new ArrayList<OwnedStock>();
         Frame = frame;
         rr = new RequestResponse();
-
+        Frame.updateCash(Integer.toString(liquidCash));
     }
     public void startTimer(){
         changeData();
@@ -57,9 +57,11 @@ public class DataController {
                         else if (tempEvent.eventType.equals("buy")){
                             System.out.println("BUYING");
                             buyStock(Integer.parseInt(tempEvent.field1));
+                            System.out.println("BUYSTOCK  ," + Integer.parseInt(tempEvent.field1));
                         }
                         else if (tempEvent.eventType.equals("sell")){
                             System.out.println("SELL");
+                            sellStock();
                         }
                         else if (tempEvent.eventType.equals("next day")){
                             System.out.println("NEXT DAY");
@@ -78,16 +80,47 @@ public class DataController {
             }
         });
     }
-
+    private void sellStock(){
+        ArrayList<Integer> indices = new ArrayList<Integer>();
+        for (OwnedStock s : myStock) {
+                if (s.s1.equals(currentSecurity)){
+                    indices.add(myStock.indexOf(s));
+                    System.out.println(myStock.indexOf(s));
+                }
+            }
+        if(indices.size() > 0) {
+            for (int s = indices.size()-1; s >=0; s--) {
+                liquidCash += open * Integer.parseInt((myStock.get(indices.get(s)).s2));
+                Frame.updateCash(Integer.toString(liquidCash));
+                Frame.removeTableEntry(indices.get(s)+1);
+                myStock.remove(myStock.get(indices.get(s)));
+            }
+        }
+    }
     public void buyStock(int quantity){
         if(quantity * open > liquidCash) {
             return;
         }
+        liquidCash = liquidCash - (int)(open * quantity);
+        Frame.updateCash(Integer.toString(liquidCash));
         OwnedStock os = new OwnedStock();
         os.s1 = currentSecurity;
-        os.s2 = Integer.toString(quantity + stockOwned());
+        os.s2 = Integer.toString(quantity);
         os.s3 = Double.toString(open);
         os.s4 = Double.toString(open*Integer.parseInt(os.s2));
+//        if(stockOwned() != 0){
+//            int index = 0;
+//            for (OwnedStock s : myStock) {
+//                if (s.s1.equals(currentSecurity)){
+//                    index = myStock.indexOf(s);
+//                }
+//            }
+//            if (index == 0) index = 1;
+//            Frame.removeTableEntry(index);
+//            myStock.add(os);
+//            Frame.insertTableEntry(index,os.s1,os.s2,os.s3,os.s4);
+//            return;
+//        }
         myStock.add(os);
         Frame.insertTableEntry(myStock.size(),os.s1,os.s2,os.s3,os.s4);
     }
@@ -116,6 +149,8 @@ public class DataController {
                 open = bar.getElementAsFloat64("high");
                 if( i == 0) {
                     Frame.openingPrice = open;
+
+
                 }
                 Frame.updateCurrentStock(currentSecurity);
                 Frame.enterData(open, i);
@@ -148,13 +183,13 @@ public class DataController {
             advanceDay();
             return;
         }
-        System.out.println(data.numValues());
+//        System.out.println(data.numValues());
         Element bar = data.getValueAsElement(minutesElapsed);
         Datetime time = bar.getElementAsDate("time");
         String date = getDate(time.toString());
         String current = getTime(time.toString());
         open = bar.getElementAsFloat64("open");
-        System.out.println(open);
+//        System.out.println(open);
         double open = bar.getElementAsFloat64("open");
         //System.out.println(open);
         if( minutesElapsed == 0) {

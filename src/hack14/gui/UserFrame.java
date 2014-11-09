@@ -190,7 +190,7 @@ public class UserFrame extends JFrame implements KeyListener {
         timeLabel.setText("TIME: " + time);
     }
     public void updateCash(String money){
-        timeLabel.setText("$: " + money);
+        moneyLabel.setText("$: " + money);
     }
     public void updateCurrentStock(String ID){
         currentStock.setText("" + ID);
@@ -340,13 +340,10 @@ private void initListeners(){
         public void actionPerformed(ActionEvent e)
         {
             if(hasEvent) return;
-            String s = JOptionPane.showInputDialog(null, "Which stock would you like to buy?");
+            String s = JOptionPane.showInputDialog(null, "How many shares would you like to buy?");
             inEvent.eventType = "buy";
             inEvent.field1 = s;
-            System.out.printf("buying the stock'%s'.\n", s);
-            String s2 = JOptionPane.showInputDialog(null, "How many shares would you like to buy?");
-            inEvent.field2 = s2;
-            System.out.printf("quantity is '%s'.\n", s2);
+            inEvent.field2 = "";
             hasEvent = true;
         }
     };
@@ -355,13 +352,10 @@ private void initListeners(){
         public void actionPerformed(ActionEvent e)
         {
             if(hasEvent) return;
-            String s = JOptionPane.showInputDialog(null, "Which stock would you like to sell?");
+//            String s = JOptionPane.showInputDialog(null, "How many shares would you like to sell?");
             inEvent.eventType = "sell";
-            inEvent.field1 = s;
-            System.out.printf("selling the stock'%s'.\n", s);
-            String s2 = JOptionPane.showInputDialog(null, "How many shares would you like to sell?");
-            inEvent.field2 = s2;
-            System.out.printf("quantity is '%s'.\n", s2);
+            inEvent.field1 = "";
+            inEvent.field2 = "";
             hasEvent = true;
         }
     };
@@ -405,7 +399,7 @@ private void initListeners(){
             if(hasEvent) return;
             String s = JOptionPane.showInputDialog(null, "Enter a stock");
             inEvent.eventType = "change stock";
-            inEvent.field1 = s;;
+            inEvent.field1 = s;
             inEvent.field2 = "";
             hasEvent = true;
         }
