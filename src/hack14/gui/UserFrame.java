@@ -14,10 +14,11 @@ public class UserFrame extends JFrame implements KeyListener {
     private int graphBottom, graphLeft;
     private int minutesElapsed;
     private int MINUTES_IN_DAY = (int) (60 * 6.5);
-    private int lastX, lastY;//x and y coordiates for most recently graphed point
+    private int lastX, lastY;//x and y coordinates for most recently graphed point
     private BufferedImage graph;
     private Graphics graphGraphics;
-    private JLabel graphLabel,currentStock,stockPrice;
+    private JLabel graphLabel;
+    private JButton currentStock,stockPrice;
     private JTable table;
     private JPanel framePanel;
     private JPanel topPanel;
@@ -57,7 +58,7 @@ public class UserFrame extends JFrame implements KeyListener {
         String columnNames[] = {"Column 1", "Column 2", "Column 3"};
         String dataValues[][] =
                 {
-                        {"SYMBOL", "OWNED", "VALUE"},
+                        {"SYMBOL", "OWNED" , "VALUE"},
                         {"IBM", "2", "143.3"},
                         {"MSFT", "4", "246.7"},
                 };
@@ -141,12 +142,12 @@ public class UserFrame extends JFrame implements KeyListener {
         bottomLeftPanel.setLayout(new GridLayout(0,1));
         bottomLeftPanel.add(bottomLeftTopPanel);
         bottomLeftPanel.add(bottomLeftBottomPanel);
-        currentStock = new JLabel("STOCK:");
-        currentStock.setPreferredSize(new Dimension(300,75));
-        currentStock.setFont(new Font("Serif", Font.PLAIN, 26));
-        stockPrice = new JLabel("VALUE:");
-        stockPrice.setPreferredSize(new Dimension(300,75));
-        stockPrice.setFont(new Font("Serif", Font.PLAIN, 26));
+        currentStock = new JButton("STOCK:");
+        currentStock.setPreferredSize(new Dimension(100,50));
+        currentStock.setFont(new Font("Serif", Font.PLAIN, 16));
+        stockPrice = new JButton("VALUE:");
+        stockPrice.setPreferredSize(new Dimension(100,50));
+        stockPrice.setFont(new Font("Serif", Font.PLAIN, 16));
         bottomLeftTopPanel.add(currentStock);
         bottomLeftTopPanel.add(stockPrice);
         bottomLeftTopPanel.add(b1);
