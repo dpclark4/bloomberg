@@ -29,7 +29,7 @@ public class UserFrame extends JFrame implements KeyListener {
     private JPanel bottomRightPanel,topRightPanel;
     private JLabel dateLabel,timeLabel,moneyLabel;
     private DefaultTableModel model;
-    private ActionListener buyListener,sellListener,nextDayListener,playListener,pauseListener;
+    private ActionListener buyListener,sellListener,nextDayListener,playListener,pauseListener,stockListener;
     private InputEvent inEvent;
     private GridBagConstraints constraints;
     public boolean hasEvent = false;
@@ -145,6 +145,7 @@ public class UserFrame extends JFrame implements KeyListener {
         currentStock = new JButton("STOCK:");
         currentStock.setPreferredSize(new Dimension(100,50));
         currentStock.setFont(new Font("Serif", Font.PLAIN, 16));
+        currentStock.addActionListener(stockListener);
         stockPrice = new JButton("VALUE:");
         stockPrice.setPreferredSize(new Dimension(100,50));
         stockPrice.setFont(new Font("Serif", Font.PLAIN, 16));
@@ -396,6 +397,17 @@ private void initListeners(){
             hasEvent = true;
         }
     };
-
+    stockListener = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(hasEvent) return;
+            String s = JOptionPane.showInputDialog(null, "Enter a stock");
+            inEvent.eventType = "change stock";
+            inEvent.field1 = s;;
+            inEvent.field2 = "";
+            hasEvent = true;
+        }
+    };
 }
 }

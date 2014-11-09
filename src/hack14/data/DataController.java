@@ -16,6 +16,8 @@ import java.io.IOException;
 public class DataController {
     Element data;
     UserFrame Frame;
+    int currentMonth = 11;
+    int currentDay = 4;
     String currentSecurity = "INTC US Equity";
     RequestResponse rr;
     Message message;
@@ -57,6 +59,9 @@ public class DataController {
                             System.out.println("NEXT DAY");
                             advanceDay();
                         }
+                        else if (tempEvent.eventType.equals("change stock")){
+                            changeStock(tempEvent.field1);
+                        }
                         if(!paused) {
                             advanceMinute();
                         }
@@ -66,6 +71,32 @@ public class DataController {
                 timer.start();
             }
         });
+    }
+    public void changeStock(String server){
+
+        try {
+            rr = new RequestResponse();
+            getData(server + " US Equity",currentMonth,currentDay);
+            changeData();
+            Frame.resetGraph();
+            for(int i = 0; i < minutesElapsed; ++i){
+                Element bar = data.getValueAsElement(i);
+                Datetime time = bar.getElementAsDate("time");
+                String date = getDate(time.toString());
+                String current = getTime(time.toString());
+                double open = bar.getElementAsFloat64("high");
+                if( minutesElapsed == 0) {
+                    Frame.openingPrice = open;
+                }
+                Frame.enterData(open, i);
+                Frame.updateDate(date);
+                Frame.updateTime(current);
+            }
+        }//t
+        catch (Exception e){
+            //day+1
+        }
+
     }
     public void advanceDay() {
         minutesElapsed = 0;
